@@ -1,4 +1,10 @@
 <?php
+	/**
+	 *
+	 * adahuys1 . abdymalikmulky
+	 * January 22 2017
+	 *
+	 */
 	
 	class AbTelegramBot{
 		
