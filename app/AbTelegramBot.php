@@ -5,9 +5,9 @@
 	 * January 22 2017
 	 *
 	 */
-	
+
 	class AbTelegramBot{
-		
+
 		public $apis;
 
 		public function __construct($token){
