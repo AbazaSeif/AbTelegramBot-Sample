@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	session_destroy();
-	ini_set('error_reporting', 0);
+	// ini_set('error_reporting', 0);
 	include 'utils/DateTimeUtil.php';
 	include 'utils/constant.php';
 
@@ -68,14 +68,26 @@
 			case '/jadwal':
 				include 'JadwalBola.php';
 
-				$limit = $splitCommand[1];
-
+				$command = $splitCommand[1];
+				$now = date("d-m-Y");
+				if($command=="today"){
+					$type = "date";
+					$query = $now;
+				}else if($command=="tomorrow"){
+					$type = "date";
+					$query = date('d-m-Y',strtotime($now . "+1 days"));
+				}else{
+					$type = "search";
+					$query = $command;
+				}
 				$jadwalBola = new JadwalBola();
-				$dataJadwal = $jadwalBola->getJadwal($limit);
+				$dataJadwal = $jadwalBola->getJadwal($type,$query);
+
 				$total = $dataJadwal['total'];
+				$count = $dataJadwal['count'];
 				$kickOff = $dataJadwal['kickoff'];
 
-				$starterMessage = $limit." dari ".$total. " Match Minggu Ini ⚽️";
+				$starterMessage = $count." dari ".$total. " Match Minggu Ini ⚽️";
 				$telegramBot->sendMessages($chatID,$starterMessage);
 
 				foreach ($kickOff as $key => $value) {
@@ -91,8 +103,9 @@
 
 
 	function tidyUp($value){
+		$jadwalMessage = "";
 		$date = DateTimeUtil::convertToIndDate($value['date']);
-		$time = $value['time'];
+		$time = $value['time']." WIB";
 		$match = $value['match'];
 		$matchHome = $match['home'];
 		$matchAway = $match['away'];
@@ -104,6 +117,7 @@
 		$jadwalMessage .= "\n🕐 ".$date." ".$time;
 		$jadwalMessage .= "\n⚽️ ".$event;
 		$jadwalMessage .= "\n📺 ".$tv;
+		$jadwalMessage .= "\n••••••••••••••••••••••••••••••••\n";
 
 		return $jadwalMessage;
 	}

@@ -7,12 +7,12 @@
     function __construct(){
       $this->curl = curl_init();
     }
-    function getJadwal($limit=""){
+    function getJadwal($type="",$query=""){
       //list jadwal
       $this->endpointUrl .= "index/";
-      //limit
-      if(!isset($limit)){
-        $this->endpointUrl .= "?limit=".$limit;
+      //query
+      if($type!=""){
+        $this->endpointUrl .= "?".$type."=".$query;
       }
 
       curl_setopt_array($this->curl, array(
